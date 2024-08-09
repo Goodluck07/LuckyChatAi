@@ -19,7 +19,7 @@ export default async function handler(req, res) {
     }
 
     const input = {
-      modelId: process.env.AWS_MODEL_ID || 'arn:aws:bedrock:us-east-1::foundation-model/amazon.titan-text-premier-v1:0', // Use environment variable for model ID
+      modelId: process.env.AWS_MODEL_ID || 'anthropic.claude-3-sonnet-20240229-v1:0', // Use environment variable for model ID
       contentType: 'application/json',
       body: JSON.stringify({ inputText }),
     };
