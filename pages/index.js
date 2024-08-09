@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { auth, db } from '../utils/firebaseConfig';
-import { doc, getDoc, setDoc, updateDoc, arrayUnion } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, arrayUnion, setDoc } from 'firebase/firestore';
 import styles from './chat.module.css';
 import CustomModal from '../components/CustomModal';
 
@@ -27,10 +27,12 @@ export default function ChatPage() {
                 const chatDoc = await getDoc(chatRef);
                 if (chatDoc.exists()) {
                     const allMessages = chatDoc.data().messages || [];
-                    setHistoryMessages(allMessages);
+                    setHistoryMessages(allMessages); // Load history messages
+                    setMessages([]); // Clear messages when signing in
+                } else {
+                    setMessages([]); // Initialize messages if no history exists
+                    setHistoryMessages([]); // Initialize history messages
                 }
-                // Clear the message box for a fresh start
-                setMessages([]);
             } else {
                 router.push('/auth'); // Redirect to auth page if not signed in
             }
@@ -46,7 +48,7 @@ export default function ChatPage() {
     const handleConfirmSignOut = async () => {
         // Clear localStorage and reset states on sign out
         localStorage.removeItem('chatMessages');
-        setMessages([]);
+        setMessages([]); // Clear messages on sign out
         setHistoryMessages([]);
         setShowHistory(false);
         await signOut(auth);
@@ -78,6 +80,11 @@ export default function ChatPage() {
                 body: JSON.stringify({ text: input, targetLang: 'en' }) // Translate to English for processing
             });
             const translateData = await resTranslate.json();
+
+            if (!resTranslate.ok) {
+                throw new Error(translateData.error || 'Translation error');
+            }
+
             const translatedInput = translateData.translatedText;
             const detectedUserLanguage = translateData.detectedSourceLanguage;
 
@@ -89,6 +96,10 @@ export default function ChatPage() {
             });
             const result = await res.json();
 
+            if (!res.ok) {
+                throw new Error(result.error || 'Model invocation error');
+            }
+
             // Translate the bot's response back to the user's detected language
             const resBackTranslate = await fetch('/api/translate', {
                 method: 'POST',
@@ -96,6 +107,10 @@ export default function ChatPage() {
                 body: JSON.stringify({ text: result.text, targetLang: detectedUserLanguage }), // Translate back to user's language
             });
             const backTranslateData = await resBackTranslate.json();
+
+            if (!resBackTranslate.ok) {
+                throw new Error(backTranslateData.error || 'Back-translation error');
+            }
 
             const botMessage = { sender: 'bot', text: backTranslateData.translatedText };
             const newMessages = [...updatedMessages, botMessage];
