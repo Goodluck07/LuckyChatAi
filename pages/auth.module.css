@@ -1,12 +1,10 @@
-
-
 /* styles/auth.module.css */
 
 .container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Full viewport height */
+    min-height: 100vh; /* Minimum viewport height */
     width: 100vw;  /* Full viewport width */
     background: #f7f7f7; /* Light background color */
     padding: 0;
@@ -17,19 +15,19 @@
     background: #ffffff;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 90%; /* Adjust width for responsiveness */
-    max-width: 100vw; /* Full width of the viewport */
+    width: 90vw; /* Adjust width relative to viewport width */
+    max-width: 100vw; /* Maximum width to prevent it from being too wide */
     padding: 2rem;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
     align-items: center;
-    /* Ensure the width adapts to the screen width */
     overflow: hidden; /* Prevent overflow */
+    min-height: 80vh; /* Ensure container is at least 80% of viewport height */
 }
 
 .title {
-    font-size: 2.5rem;
+    font-size: calc(1.5rem + 1vw); /* Responsive font size based on viewport width */
     font-weight: bold;
     margin-bottom: 0.5rem;
     color: #333;
@@ -37,14 +35,14 @@
 }
 
 .subtitle {
-    font-size: 1.5rem;
+    font-size: calc(1rem + 0.5vw); /* Responsive font size based on viewport width */
     color: #555;
     margin-bottom: 1rem;
     text-align: center;
 }
 
 .description {
-    font-size: 1.1rem;
+    font-size: calc(0.8rem + 0.5vw); /* Responsive font size based on viewport width */
     color: #777;
     margin-bottom: 2rem;
     text-align: center;
@@ -62,7 +60,7 @@
     margin-bottom: 1rem;
     border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 1rem;
+    font-size: calc(0.9rem + 0.5vw); /* Responsive font size based on viewport width */
 }
 
 .button {
@@ -71,7 +69,7 @@
     color: white;
     border: none;
     border-radius: 4px;
-    font-size: 1rem;
+    font-size: calc(0.9rem + 0.5vw); /* Responsive font size based on viewport width */
     cursor: pointer;
     transition: background-color 0.3s ease;
     margin-bottom: 1rem;
@@ -107,7 +105,7 @@
 }
 
 .featuresTitle {
-    font-size: 1.5rem;
+    font-size: calc(1.25rem + 0.5vw); /* Responsive font size based on viewport width */
     font-weight: bold;
     color: #333;
     margin-bottom: 1rem;
@@ -118,10 +116,45 @@
     list-style-position: inside;
     padding: 0;
     margin: 0;
-    font-size: 1rem;
+    font-size: calc(0.9rem + 0.5vw); /* Responsive font size based on viewport width */
     color: #555;
 }
 
 .featureList li {
     margin-bottom: 0.75rem;
+}
+
+/* Responsive Styles for Height */
+@media (max-height: 600px) {
+    .formContainer {
+        padding: 1.5rem; /* Reduce padding on shorter screens */
+    }
+
+    .title {
+        font-size: calc(1.25rem + 1vw); /* Slightly smaller font size on shorter screens */
+    }
+
+    .subtitle {
+        font-size: calc(0.9rem + 0.5vw); /* Slightly smaller font size on shorter screens */
+    }
+
+    .description {
+        font-size: calc(0.7rem + 0.5vw); /* Slightly smaller font size on shorter screens */
+    }
+
+    .featuresTitle {
+        font-size: calc(1rem + 0.5vw); /* Slightly smaller font size on shorter screens */
+    }
+
+    .featureList {
+        font-size: calc(0.8rem + 0.5vw); /* Slightly smaller font size on shorter screens */
+    }
+}
+
+/* Additional media queries for smaller screens if needed */
+@media (max-width: 480px) {
+    .formContainer {
+        width: 100%; /* Full width on very small screens */
+        padding: 1rem; /* Further adjust padding for very small screens */
+    }
 }

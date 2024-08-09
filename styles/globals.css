@@ -81,8 +81,9 @@
 
 html,
 body {
+  height: 100%; /* Ensure the height is 100% for proper viewport calculations */
   max-width: 100vw;
-  overflow-x: hidden;
+  overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 body {
@@ -93,6 +94,9 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure the body takes at least the full height of the viewport */
 }
 
 a {

@@ -153,7 +153,7 @@ export default function ChatPage() {
     return (
         <div className={styles.container}>
             <header className={styles.header}>
-                <h1>Welcome to Your AI Assistant</h1>
+                <h1>Welcome to LuckyChatAI Assistant</h1>
                 <div className={styles.userInfo}>
                     <p>Logged in as: <strong>{user.email}</strong></p>
                     <button onClick={handleSignOut} className={styles.button}>
