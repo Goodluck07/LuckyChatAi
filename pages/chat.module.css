@@ -1,3 +1,4 @@
+/* General container styling */
 .container {
   max-width: 800px;
   margin: 0 auto;
@@ -8,9 +9,10 @@
   border-radius: 8px;
 }
 
+/* Header styling */
 .header {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column; /* Stack header items vertically on small screens */
   align-items: center;
   border-bottom: 2px solid #f0f0f0;
   padding-bottom: 1rem;
@@ -23,8 +25,11 @@
   margin: 0;
 }
 
+/* User info styling */
 .userInfo {
   display: flex;
+  flex-wrap: wrap; /* Wrap buttons on small screens */
+  justify-content: center;
   align-items: center;
 }
 
@@ -34,7 +39,7 @@
 }
 
 .button {
-  margin-left: 10px;
+  margin: 5px; /* Adjust spacing */
   padding: 0.5rem 1rem;
   font-size: 1rem;
   cursor: pointer;
@@ -48,6 +53,7 @@
   background-color: #005bb5;
 }
 
+/* Chat box styling */
 .chatBox {
   border: 1px solid #ccc;
   padding: 1rem;
@@ -59,6 +65,7 @@
   box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+/* Message styling */
 .userMessage {
   text-align: right;
   background-color: #e1ffe1;
@@ -75,35 +82,37 @@
   margin: 5px 0;
 }
 
+/* Input container styling */
 .inputContainer {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column; /* Stack input and button on small screens */
+  align-items: stretch;
 }
 
 .inputField {
-  width: 85%;
+  width: 100%;
   padding: 0.5rem;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
+  margin-bottom: 10px; /* Space between input and button */
 }
 
 .sendButton {
-  padding: 0.5rem 1rem;
+  padding: 0.5rem;
   font-size: 1rem;
   cursor: pointer;
   background-color: #0070f3;
   color: white;
   border: none;
   border-radius: 4px;
-  margin-left: 10px;
 }
 
 .sendButton:hover {
   background-color: #005bb5;
 }
 
+/* History container styling */
 .historyContainer {
   margin-top: 20px;
   padding: 10px;
@@ -122,4 +131,32 @@
   text-align: center;
   font-style: italic;
   color: #999;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+  .header {
+    flex-direction: column; /* Stack header items vertically */
+  }
+
+  .userInfo {
+    flex-direction: column; /* Stack user info items vertically */
+    align-items: stretch;
+  }
+
+  .button {
+    margin: 5px 0; /* Vertical spacing for buttons */
+  }
+
+  .inputContainer {
+    flex-direction: column; /* Stack input and button vertically */
+  }
+
+  .inputField {
+    width: 100%;
+  }
+
+  .sendButton {
+    width: 100%;
+  }
 }
