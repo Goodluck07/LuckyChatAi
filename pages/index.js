@@ -82,7 +82,7 @@ export default function ChatPage() {
             const detectedUserLanguage = translateData.detectedSourceLanguage;
 
             // Send the translated input to the model for processing
-            const res = await fetch('http://localhost:3000/api/invoke-model', {
+            const res = await fetch('/api/invoke-model', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ inputText: translatedInput }),
