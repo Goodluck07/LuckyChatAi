@@ -83,13 +83,28 @@ export default function Auth() {
                 </p>
                 <div className={styles.features}>
                     <h2 className={styles.featuresTitle}>Key Features</h2>
-                    <ul className={styles.featureList}>
-                        <li><strong>Real-time Support:</strong> Receive instant responses to customer inquiries, reducing wait times and improving satisfaction.</li>
-                        <li><strong>24/7 Availability:</strong> The chatbot is always available, providing support and assistance round the clock.</li>
-                        <li><strong>Customizable Responses:</strong> Tailor the chatbot’s responses to match your brand’s voice and style, enhancing the customer experience.</li>
-                        <li><strong>Multi-language Support:</strong> Engage with customers in multiple languages, expanding your reach and inclusivity.</li>
-                        <li><strong>Easy Integration:</strong> Seamlessly integrate the chatbot with your existing systems and platforms for a smooth deployment.</li>
-                    </ul>
+                    <div className={styles.featureBoxes}>
+                        <div className={styles.featureBox}>
+                            <h3>Real-time Support</h3>
+                            <p>Receive instant responses to customer inquiries, reducing wait times and improving satisfaction.</p>
+                        </div>
+                        <div className={styles.featureBox}>
+                            <h3>24/7 Availability</h3>
+                            <p>The chatbot is always available, providing support and assistance round the clock.</p>
+                        </div>
+                        <div className={styles.featureBox}>
+                            <h3>Customizable Responses</h3>
+                            <p>Tailor the chatbot’s responses to match your brand’s voice and style, enhancing the customer experience.</p>
+                        </div>
+                        <div className={styles.featureBox}>
+                            <h3>Multi-language Support</h3>
+                            <p>Engage with customers in multiple languages, expanding your reach and inclusivity.</p>
+                        </div>
+                        <div className={styles.featureBox}>
+                            <h3>Easy Integration</h3>
+                            <p>Seamlessly integrate the chatbot with your existing systems and platforms for a smooth deployment.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

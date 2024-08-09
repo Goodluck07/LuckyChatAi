@@ -19,144 +19,149 @@
   margin-bottom: 1rem;
 }
 
-.header h1 {
-  font-size: 1.8rem;
-  color: #333;
-  margin: 0;
-}
-
-/* User info styling */
 .userInfo {
   display: flex;
-  flex-wrap: wrap; /* Wrap buttons on small screens */
-  justify-content: center;
-  align-items: center;
-}
-
-.userInfo p {
-  margin: 0;
-  padding-right: 10px;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  margin-top: 1rem;
 }
 
 .button {
-  margin: 5px; /* Adjust spacing */
+  margin: 0 0.5rem;
   padding: 0.5rem 1rem;
-  font-size: 1rem;
-  cursor: pointer;
-  background-color: #0070f3;
-  color: white;
   border: none;
   border-radius: 4px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
 }
 
 .button:hover {
-  background-color: #005bb5;
+  background: #0056b3;
 }
 
 /* Chat box styling */
 .chatBox {
-  border: 1px solid #ccc;
-  padding: 1rem;
-  height: 500px;
+  display: flex;
+  flex-direction: column;
+  height: 400px;
   overflow-y: scroll;
-  background-color: #f9f9f9;
-  margin-bottom: 1rem;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
   border-radius: 8px;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 1rem;
 }
 
-/* Message styling */
+.userMessage, .botMessage {
+  margin: 0.5rem 0;
+  padding: 0.5rem;
+  border-radius: 8px;
+  max-width: 80%;
+}
+
 .userMessage {
-  text-align: right;
-  background-color: #e1ffe1;
-  padding: 8px;
-  border-radius: 5px;
-  margin: 5px 0;
+  align-self: flex-end;
+  background: #e0f7fa;
 }
 
 .botMessage {
-  text-align: left;
-  background-color: #e1e1ff;
-  padding: 8px;
-  border-radius: 5px;
-  margin: 5px 0;
+  align-self: flex-start;
+  background: #f1f8e9;
+}
+
+.loading {
+  text-align: center;
+  color: #007bff;
 }
 
 /* Input container styling */
 .inputContainer {
   display: flex;
-  flex-direction: column; /* Stack input and button on small screens */
-  align-items: stretch;
+  margin-top: 1rem;
 }
 
 .inputField {
-  width: 100%;
+  flex: 1;
   padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid #ddd;
   border-radius: 4px;
-  margin-bottom: 10px; /* Space between input and button */
 }
 
 .sendButton {
-  padding: 0.5rem;
-  font-size: 1rem;
-  cursor: pointer;
-  background-color: #0070f3;
-  color: white;
+  margin-left: 0.5rem;
+  padding: 0.5rem 1rem;
   border: none;
   border-radius: 4px;
+  background: #007bff;
+  color: #fff;
+  cursor: pointer;
 }
 
-.sendButton:hover {
-  background-color: #005bb5;
+.sendButton:disabled {
+  background: #b0bec5;
+  cursor: not-allowed;
 }
 
 /* History container styling */
 .historyContainer {
-  margin-top: 20px;
-  padding: 10px;
-  border-top: 1px solid #ccc;
-  background-color: #f9f9f9;
+  margin-top: 2rem;
+  padding: 1rem;
+  border: 1px solid #ddd;
   border-radius: 8px;
+  background: #fafafa;
 }
 
 .historyContainer h2 {
-  font-size: 1.5rem;
-  color: #333;
-  margin-bottom: 10px;
+  margin-top: 0;
 }
 
-.loading {
+/* Welcome message styling */
+.welcomeMessage {
   text-align: center;
-  font-style: italic;
-  color: #999;
+  padding: 1rem;
+  background: #e0e0e0;
+  border-radius: 8px;
+  margin-bottom: 1rem;
 }
 
-/* Responsive design */
-@media (max-width: 600px) {
-  .header {
-    flex-direction: column; /* Stack header items vertically */
-  }
+.logo {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #444;
+  margin-bottom: 1rem;
+}
 
-  .userInfo {
-    flex-direction: column; /* Stack user info items vertically */
-    align-items: stretch;
-  }
+.suggestions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
 
-  .button {
-    margin: 5px 0; /* Vertical spacing for buttons */
-  }
+.suggestionBox {
+  margin: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: #f0f0f0;
+  color: #333;
+  cursor: pointer;
+}
 
-  .inputContainer {
-    flex-direction: column; /* Stack input and button vertically */
-  }
+.suggestionBox:hover {
+  background: #ddd;
+}
 
-  .inputField {
-    width: 100%;
-  }
+.clearHistoryButton {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  background: #dc3545;
+  color: #fff;
+  cursor: pointer;
+}
 
-  .sendButton {
-    width: 100%;
-  }
+.clearHistoryButton:hover {
+  background: #c82333;
 }

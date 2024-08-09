@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useRouter } from 'next/router';
 import { auth, db } from '../utils/firebaseConfig';
-import { doc, getDoc, updateDoc, arrayUnion, setDoc } from 'firebase/firestore';
+import { collection, addDoc, getDocs, query, where, deleteDoc, doc } from 'firebase/firestore';
 import styles from './chat.module.css';
 import CustomModal from '../components/CustomModal';
 
@@ -15,6 +15,7 @@ export default function ChatPage() {
     const [showHistory, setShowHistory] = useState(false);
     const [historyMessages, setHistoryMessages] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [conversationStarted, setConversationStarted] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -22,19 +23,21 @@ export default function ChatPage() {
             if (user) {
                 setUser(user);
 
+                // Load session messages from localStorage
+                const savedMessages = JSON.parse(localStorage.getItem('currentMessages')) || [];
+                setMessages(savedMessages);
+
                 // Load full chat history from Firestore
-                const chatRef = doc(db, 'chats', user.uid);
-                const chatDoc = await getDoc(chatRef);
-                if (chatDoc.exists()) {
-                    const allMessages = chatDoc.data().messages || [];
-                    setHistoryMessages(allMessages); // Load history messages
-                    setMessages([]); // Clear messages when signing in
-                } else {
-                    setMessages([]); // Initialize messages if no history exists
-                    setHistoryMessages([]); // Initialize history messages
-                }
+                const conversationsRef = collection(db, 'conversations');
+                const q = query(conversationsRef, where('userId', '==', user.uid));
+                const querySnapshot = await getDocs(q);
+                const allMessages = [];
+                querySnapshot.forEach((doc) => {
+                    allMessages.push(...doc.data().messages || []);
+                });
+                setHistoryMessages(allMessages);
             } else {
-                router.push('/auth'); // Redirect to auth page if not signed in
+                router.push('/auth');
             }
         });
 
@@ -46,9 +49,8 @@ export default function ChatPage() {
     };
 
     const handleConfirmSignOut = async () => {
-        // Clear localStorage and reset states on sign out
-        localStorage.removeItem('chatMessages');
-        setMessages([]); // Clear messages on sign out
+        localStorage.removeItem('currentMessages');
+        setMessages([]);
         setHistoryMessages([]);
         setShowHistory(false);
         await signOut(auth);
@@ -60,10 +62,25 @@ export default function ChatPage() {
     };
 
     const handleShowHistory = () => {
-        setShowHistory(!showHistory); // Toggle history display
+        setShowHistory(!showHistory);
     };
 
-    async function handleSend() {
+    const handleClearHistory = async () => {
+        if (!user) return;
+
+        const conversationsRef = collection(db, 'conversations');
+        const q = query(conversationsRef, where('userId', '==', user.uid));
+        const querySnapshot = await getDocs(q);
+
+        // Delete each document
+        for (const docSnap of querySnapshot.docs) {
+            await deleteDoc(doc(db, 'conversations', docSnap.id));  // Use deleteDoc
+        }
+
+        setHistoryMessages([]);
+    };
+
+    const handleSend = async () => {
         if (!input) return;
 
         setLoading(true);
@@ -71,9 +88,12 @@ export default function ChatPage() {
         const updatedMessages = [...messages, userMessage];
         setMessages(updatedMessages);
         setInput('');
+        setConversationStarted(true);
+
+        // Save current session messages to localStorage
+        localStorage.setItem('currentMessages', JSON.stringify(updatedMessages));
 
         try {
-            // Translate the user's input to English for processing
             const resTranslate = await fetch('/api/translate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -90,7 +110,6 @@ export default function ChatPage() {
             const translatedInput = translateData.translatedText;
             const detectedUserLanguage = translateData.detectedSourceLanguage;
 
-            // Send the translated input to the model for processing
             const res = await fetch('/api/invoke-model', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -105,7 +124,6 @@ export default function ChatPage() {
 
             const result = await res.json();
 
-            // Translate the bot's response back to the user's detected language
             const resBackTranslate = await fetch('/api/translate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -123,32 +141,37 @@ export default function ChatPage() {
             const newMessages = [...updatedMessages, botMessage];
             setMessages(newMessages);
 
-            // Save the new session messages to Firestore
-            const chatRef = doc(db, 'chats', user.uid);
-            
-            // Check if the document exists before updating
-            const chatDoc = await getDoc(chatRef);
-            if (!chatDoc.exists()) {
-                // Create the document if it doesn't exist
-                await setDoc(chatRef, { messages: newMessages });
-            } else {
-                // Update the existing document
-                await updateDoc(chatRef, {
-                    messages: arrayUnion(...newMessages)
-                });
-            }
+            const conversationsRef = collection(db, 'conversations');
+            await addDoc(conversationsRef, {
+                userId: user.uid,
+                messages: newMessages
+            });  // Save the entire message array with userId
+
+            // Update localStorage with the new messages
+            localStorage.setItem('currentMessages', JSON.stringify(newMessages));
+
         } catch (error) {
             console.error('Error getting response:', error);
             const errorMessage = { sender: 'bot', text: `Sorry, there was an error: ${error.message}` };
             setMessages(messages => [...messages, errorMessage]);
+
+            // Update localStorage with the error message
+            localStorage.setItem('currentMessages', JSON.stringify([...messages, errorMessage]));
         } finally {
             setLoading(false);
         }
-    }
+    };
+
+    const handleSuggestionClick = async (suggestionText) => {
+        setInput(suggestionText);
+        await handleSend();
+    };
 
     if (!user) {
         return <p>Loading...</p>;
     }
+
+    const showInitialContent = messages.length === 0;
 
     return (
         <div className={styles.container}>
@@ -165,12 +188,43 @@ export default function ChatPage() {
                 </div>
             </header>
             <div className={styles.chatBox}>
+                {showInitialContent && !conversationStarted && (
+                    <div className={styles.welcomeMessage}>
+                        <div className={styles.logo}>GB Luna</div>
+                        <div className={styles.suggestions}>
+                            <div 
+                                className={styles.suggestionBox}
+                                onClick={() => handleSuggestionClick('I Need a creative idea!')}
+                            >
+                                Need a creative idea?
+                            </div>
+                            <div 
+                                className={styles.suggestionBox}
+                                onClick={() => handleSuggestionClick('I am Looking for advice, any help?')}
+                            >
+                                Looking for advice?
+                            </div>
+                            <div 
+                                className={styles.suggestionBox}
+                                onClick={() => handleSuggestionClick('I Want to learn something new and exciting')}
+                            >
+                                Want to learn something new?
+                            </div>
+                            <div 
+                                className={styles.suggestionBox}
+                                onClick={() => handleSuggestionClick('I Need help with a project')}
+                            >
+                                Need help with a project?
+                            </div>
+                        </div>
+                    </div>
+                )}
                 {messages.map((message, index) => (
                     <div key={index} className={message.sender === 'user' ? styles.userMessage : styles.botMessage}>
-                        <p><strong>{message.sender === 'user' ? 'You' : 'Bot'}:</strong> {message.text}</p>
+                        <p><strong>{message.sender === 'user' ? 'You' : 'Luna'}:</strong> {message.text}</p>
                     </div>
                 ))}
-                {loading && <p className={styles.loading}>Bot is typing...</p>}
+                {loading && <p className={styles.loading}>Luna is typing...</p>}
             </div>
             <div className={styles.inputContainer}>
                 <input 
@@ -178,6 +232,7 @@ export default function ChatPage() {
                     value={input} 
                     onChange={(e) => setInput(e.target.value)} 
                     onKeyPress={(e) => e.key === 'Enter' && handleSend()} 
+                    placeholder="Message Luna" 
                     className={styles.inputField} 
                 />
                 <button onClick={handleSend} className={styles.sendButton} disabled={loading}>
@@ -189,15 +244,18 @@ export default function ChatPage() {
                     <h2>Chat History</h2>
                     {historyMessages.map((message, index) => (
                         <div key={index} className={message.sender === 'user' ? styles.userMessage : styles.botMessage}>
-                            <p><strong>{message.sender === 'user' ? 'You' : 'Bot'}:</strong> {message.text}</p>
+                            <p><strong>{message.sender === 'user' ? 'You' : 'Luna'}:</strong> {message.text}</p>
                         </div>
                     ))}
+                    <button onClick={handleClearHistory} className={styles.clearHistoryButton}>
+                        Clear History
+                    </button>
                 </div>
             )}
             <CustomModal 
                 isOpen={isModalOpen} 
-                onRequestClose={handleCloseModal} 
                 onConfirm={handleConfirmSignOut} 
+                onRequestClose={handleCloseModal} 
             />
         </div>
     );
