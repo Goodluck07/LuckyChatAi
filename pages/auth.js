@@ -104,6 +104,9 @@ export default function Auth() {
                             <h3>Easy Integration</h3>
                             <p>Seamlessly integrate the chatbot with your existing systems and platforms for a smooth deployment.</p>
                         </div>
+                        <footer className={styles.footer}>
+                            <p>&copy; {new Date().getFullYear()} Goodluck Badewole. All rights reserved.</p>
+                        </footer>
                     </div>
                 </div>
             </div>

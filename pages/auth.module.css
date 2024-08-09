@@ -180,3 +180,19 @@
         font-size: calc(0.8rem + 0.5vw); /* Slightly smaller font size on shorter screens */
     }
 }
+
+
+.footer {
+    position: left;
+    bottom: 0;
+    width: 100%;
+    background: #ea1616; /* Light gray background for the footer */
+    padding: 1rem;
+    text-align: center;
+    font-size: calc(0.8rem + 0.2vw); /* Responsive font size */
+    color: #242020; /* Light gray text */
+  }
+  
+  .footer p {
+    margin: 0;
+  }

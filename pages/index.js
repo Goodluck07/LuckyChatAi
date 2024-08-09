@@ -258,5 +258,8 @@ export default function ChatPage() {
                 onRequestClose={handleCloseModal} 
             />
         </div>
+        
     );
+    
 }
+
