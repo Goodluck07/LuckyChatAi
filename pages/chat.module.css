@@ -1,11 +1,10 @@
-
 /* General container styling */
 .container {
   max-width: 800px;
   margin: 0 auto;
   padding: 2rem;
   font-family: Arial, sans-serif;
-  background: #ffffff;
+  background: #ffffff; /* Light mode background */
   box-shadow: 0 4px 8px rgba(252, 6, 6, 0.1);
   border-radius: 8px;
 }
@@ -20,6 +19,17 @@
   margin-bottom: 1rem;
 }
 
+/* Dark mode header styling */
+@media (prefers-color-scheme: dark) {
+  .container {
+    background: #333333; /* Dark mode background */
+  }
+  .header {
+    border-bottom: 2px solid #ff5722; /* Dark mode border color */
+  }
+}
+
+/* User Info, Buttons, and Other Elements Styling */
 .userInfo {
   display: flex;
   justify-content: space-between;
@@ -167,3 +177,37 @@
   background: #c82333;
 }
 
+/* Dark mode styling */
+@media (prefers-color-scheme: dark) {
+  body {
+    background: #121212; /* Dark mode body background */
+    color: #e0e0e0; /* Dark mode text color */
+  }
+
+  .chatBox {
+    background: #2c2c2c; /* Dark mode chat box background */
+    border: 1px solid #444; /* Dark mode border color */
+  }
+
+  .userMessage {
+    background: #003d3d; /* Dark mode user message background */
+  }
+
+  .botMessage {
+    background: #3b3b3b; /* Dark mode bot message background */
+  }
+
+  .historyContainer {
+    background: #1e1e1e; /* Dark mode history container background */
+    border: 1px solid #444; /* Dark mode history container border color */
+  }
+
+  .welcomeMessage {
+    background: #3c3c3c; /* Dark mode welcome message background */
+  }
+
+  .suggestionBox {
+    background: #2c2c2c; /* Dark mode suggestion box background */
+    border: 1px solid #444; /* Dark mode suggestion box border color */
+  }
+}
