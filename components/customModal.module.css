@@ -53,3 +53,31 @@
 .cancelButton:hover {
     background-color: #999;
 }
+
+@media (prefers-color-scheme: dark) {
+    .modal {
+        background: #2c2c2c;
+        color: #e0e0e0;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .overlay {
+        background-color: rgba(0, 0, 0, 0.85);
+    }
+
+    .confirmButton {
+        background-color: #1e90ff;
+    }
+
+    .confirmButton:hover {
+        background-color: #1c7fd0;
+    }
+
+    .cancelButton {
+        background-color: #444;
+    }
+
+    .cancelButton:hover {
+        background-color: #666;
+    }
+}

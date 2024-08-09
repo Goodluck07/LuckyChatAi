@@ -139,7 +139,7 @@
 .logo {
   font-size: 2rem;
   font-weight: bold;
-  color: #444;
+  color: #5d4242;
   margin-bottom: 1rem;
 }
 
@@ -155,7 +155,7 @@
   border: 1px solid #ccc;
   border-radius: 8px;
   background: #f0f0f0;
-  color: #2a2626;
+  color: #333;
   cursor: pointer;
 }
 
@@ -203,7 +203,7 @@
   }
 
   .suggestionBox {
-    background: #2c2c2c; /* Dark mode suggestion box background */
+    background: #434343; /* Dark mode suggestion box background */
     border: 1px solid #444; /* Dark mode suggestion box border color */
   }
 }
