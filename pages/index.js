@@ -73,18 +73,20 @@ export default function ChatPage() {
         setInput('');
 
         try {
-            // Translate the user's input to English for processing and detect the language
+            // Translate the user's input to English for processing
             const resTranslate = await fetch('/api/translate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: input, targetLang: 'en' }) // Translate to English for processing
+                body: JSON.stringify({ text: input, targetLang: 'en' })
             });
-            const translateData = await resTranslate.json();
 
             if (!resTranslate.ok) {
-                throw new Error(translateData.error || 'Translation error');
+                const errorData = await resTranslate.json();
+                console.error('Translation API error:', errorData);
+                throw new Error(errorData.error || 'Translation error');
             }
 
+            const translateData = await resTranslate.json();
             const translatedInput = translateData.translatedText;
             const detectedUserLanguage = translateData.detectedSourceLanguage;
 
@@ -94,36 +96,50 @@ export default function ChatPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ inputText: translatedInput }),
             });
-            const result = await res.json();
 
             if (!res.ok) {
+                const result = await res.json();
+                console.error('Model invocation API error:', result);
                 throw new Error(result.error || 'Model invocation error');
             }
+
+            const result = await res.json();
 
             // Translate the bot's response back to the user's detected language
             const resBackTranslate = await fetch('/api/translate', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text: result.text, targetLang: detectedUserLanguage }), // Translate back to user's language
+                body: JSON.stringify({ text: result.text, targetLang: detectedUserLanguage }),
             });
-            const backTranslateData = await resBackTranslate.json();
 
             if (!resBackTranslate.ok) {
+                const backTranslateData = await resBackTranslate.json();
+                console.error('Back-translation API error:', backTranslateData);
                 throw new Error(backTranslateData.error || 'Back-translation error');
             }
 
+            const backTranslateData = await resBackTranslate.json();
             const botMessage = { sender: 'bot', text: backTranslateData.translatedText };
             const newMessages = [...updatedMessages, botMessage];
             setMessages(newMessages);
 
-            // Save the new session messages to Firestore, appending to the existing history
+            // Save the new session messages to Firestore
             const chatRef = doc(db, 'chats', user.uid);
-            await updateDoc(chatRef, {
-                messages: arrayUnion(...newMessages)
-            });
+            
+            // Check if the document exists before updating
+            const chatDoc = await getDoc(chatRef);
+            if (!chatDoc.exists()) {
+                // Create the document if it doesn't exist
+                await setDoc(chatRef, { messages: newMessages });
+            } else {
+                // Update the existing document
+                await updateDoc(chatRef, {
+                    messages: arrayUnion(...newMessages)
+                });
+            }
         } catch (error) {
             console.error('Error getting response:', error);
-            const errorMessage = { sender: 'bot', text: 'Sorry, there was an error.' };
+            const errorMessage = { sender: 'bot', text: `Sorry, there was an error: ${error.message}` };
             setMessages(messages => [...messages, errorMessage]);
         } finally {
             setLoading(false);
