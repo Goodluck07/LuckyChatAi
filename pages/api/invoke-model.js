@@ -1,8 +1,13 @@
 // pages/api/invoke-model.js
 import { BedrockRuntimeClient, InvokeModelCommand } from '@aws-sdk/client-bedrock-runtime';
 
+// Initialize AWS SDK client
 const client = new BedrockRuntimeClient({
-  region: 'us-east-1',
+  region: process.env.AWS_REGION || 'us-east-1', // Use environment variable for region
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID, // Use environment variable for access key
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY, // Use environment variable for secret key
+  },
 });
 
 export default async function handler(req, res) {
@@ -14,7 +19,7 @@ export default async function handler(req, res) {
     }
 
     const input = {
-      modelId: 'arn:aws:bedrock:us-east-1::foundation-model/amazon.titan-text-premier-v1:0',
+      modelId: process.env.AWS_MODEL_ID || 'arn:aws:bedrock:us-east-1::foundation-model/amazon.titan-text-premier-v1:0', // Use environment variable for model ID
       contentType: 'application/json',
       body: JSON.stringify({ inputText }),
     };
