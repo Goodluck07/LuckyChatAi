@@ -179,10 +179,6 @@
 
 /* Dark mode styling */
 @media (prefers-color-scheme: dark) {
-  body {
-    background: #121212; /* Dark mode body background */
-    color: #e0e0e0; /* Dark mode text color */
-  }
 
   .chatBox {
     background: #2c2c2c; /* Dark mode chat box background */
