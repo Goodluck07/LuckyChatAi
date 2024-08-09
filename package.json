@@ -9,9 +9,16 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@aws-sdk/client-bedrock": "^3.624.0",
+    "@aws-sdk/client-bedrock-runtime": "^3.624.0",
+    "@aws-sdk/client-sts": "^3.624.0",
+    "@elastic/elasticsearch": "^8.14.0",
+    "@google-cloud/translate": "^8.3.0",
+    "firebase": "^10.12.5",
+    "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
-    "next": "14.2.5"
+    "react-modal": "^3.16.1"
   },
   "devDependencies": {
     "eslint": "^8",
