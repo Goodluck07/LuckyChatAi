@@ -6,8 +6,8 @@
     "Fira Mono", "Droid Sans Mono", "Courier New", monospace;
 
   --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 173, 216, 230; /* Light blue start color */
-  --background-end-rgb: 135, 206, 250; /* Light sky blue end color */
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
 
   --primary-glow: conic-gradient(
     from 180deg at 50% 50%,
@@ -90,9 +90,10 @@ body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
-      rgb(var(--background-start-rgb)),
+      transparent,
       rgb(var(--background-end-rgb))
-    );
+    )
+    rgb(var(--background-start-rgb));
   display: flex;
   flex-direction: column;
   min-height: 100vh; /* Ensure the body takes at least the full height of the viewport */
